@@ -1,6 +1,6 @@
 <template lang="html">
-    <div class="panel">
-        <h1>{{ this.title }}</h1>
+    <div class="panel bg-light p-4">
+        <h3>{{ this.title }}</h3>
         <slot></slot>
     </div>
 </template>
@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss">
 .panel {
-    > h1 {
+    > h3 {
         text-transform: uppercase;
         // font-family: 'Raleway';
     }

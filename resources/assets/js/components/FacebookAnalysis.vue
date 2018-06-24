@@ -1,6 +1,15 @@
 <template lang="html">
     <panel title="Facebook">
-        <button class="btn btn-primary" @click="getID">Get ID</button>
+        <div class="stats d-flex justify-content-center w-100">
+            <h4 v-if="this.competitor">
+                <span class="text-muted small">Un post ogni </span>
+                {{ competitor.stats }}
+                <span class="text-muted small">gg</span>
+            </h4>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-info" @click="grabPosts">Grab Posts</button>
+        </div>
     </panel>
 </template>
 
@@ -13,29 +22,71 @@ export default {
         Panel
     },
     props: {
+        competitor_id: {
+            type: Number,
+            default: 1,
+        },
         fb_token: {
             type: String,
             default: null,
         },
     },
+    data: function() {
+        return {
+            competitor: null,
+            pageID: null,
+            posts: [],
+        }
+    },
     methods: {
         getID: function() {
-            // console.log(FB)
-            // if (this.fb_token) {
-            //     var url = 'https://www.facebook.com/rareartlabs'
-            //
-            //     var data = new FormData()
-            //     data.append('fb_token', this.fb_token)
-            //     data.append('pageUrl', url)
-            //
-            //     this.$http.post('/api/get_facebook_id', data).then(response => {
-            //         console.log(response)
-            //     })
-            // }
+            FB.api(
+                this.competitor.pages[0].url,
+                { fields: 'id', access_token: this.fb_token },
+                response => {
+                    var data = new FormData()
+                    data.append('id', this.competitor.pages[0].id)
+                    data.append('page_id', response.id)
+                    this.$http.post('/api/facebook/save-page-id', data).then(response => {
+                        this.competitor = response.data
+                    })
+                }
+            )
+        },
+        getThePage: function() {
+            this.$http.get('/api/competitor/'+this.competitor_id).then(response => {
+                this.competitor = response.data
+
+                if (this.competitor.pages[0].FBid) {
+                    this.pageID = this.competitor.pages[0].FBid
+                } else {
+                    this.getID()
+                }
+            })
+        },
+        grabPosts: function() {
+            if (this.pageID) {
+                FB.api(
+                    '/'+this.pageID+'/feed',
+                    { access_token: this.fb_token },
+                    response => {
+                        var data = new FormData()
+                        data.append('page_id', this.competitor.pages[0].id)
+                        data.append('posts', JSON.stringify(response.data))
+
+                        this.$http.post('/api/facebook/save-posts', data).then(response => {
+                            this.posts = response.data
+                            console.log(this.posts)
+                        })
+                    }
+                )
+            } else {
+                this.getID()
+            }
         }
     },
     mounted: function() {
-
+        this.getThePage()
     }
 }
 </script>

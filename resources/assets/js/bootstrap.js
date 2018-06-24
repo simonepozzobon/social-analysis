@@ -62,7 +62,7 @@ window.fbAsyncInit = function() {
     FB.init({
         appId: '2073534662678601',
         cookie: true, // This is important, it's not enabled by default
-        version: 'v3.00'
+        version: 'v2.2'
     });
 };
 

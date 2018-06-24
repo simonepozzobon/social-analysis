@@ -13881,7 +13881,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__EventBus__ = __webpack_require__(75);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_gsap__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_gsap__ = __webpack_require__(71);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -13911,14 +13913,16 @@ Vue.prototype.$http.defaults.headers.common = {
 
 
 
+
 var app = new Vue({
     el: '#app',
     components: {
-        FacebookAnalysis: __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue___default.a
+        FacebookAnalysis: __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue___default.a,
+        TwitterAnalysis: __WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue___default.a
     },
     data: function data() {
         return {
-            fb_token: null
+            fb_token: 'EAACEdEose0cBAIBQ1PLn5gliZB9rBf6k1xZBzey3pV3unFMzzrfm7vlOVEQ5RFJZAD3wQwzj2aZAZBMZBlfZAqeddIP3YUPNG6DhUqkZC7mLqtckjpUodVB46UJII6pJ9HTNNPKwc5wLwFn23lJ5yOuFlVFdd5AZBsTindxZBhyXOXKs4fVC8ZBkzg73Eg3ZBjXyABUhci7IgPGOggZDZD'
         };
     },
     methods: {
@@ -13927,24 +13931,18 @@ var app = new Vue({
 
             FB.login(function (response) {
                 if (response.authResponse) {
-                    __WEBPACK_IMPORTED_MODULE_3_gsap__["a" /* TweenMax */].to(_this.$refs.FBbtn, .2, {
-                        display: 'none',
-                        opacity: 0
-                    });
-                    var accessToken = FB.getAuthResponse();
-
-                    if (accessToken) {
-                        _this.fb_token = accessToken.accessToken;
-                    }
-
-                    FB.api('/rareartlabs', function (response) {
-                        console.log(response);
-                    });
+                    _this.hideLoginBtn();
                 } else {
                     alert('Not authorized.');
                 }
             });
             return false;
+        },
+        hideLoginBtn: function hideLoginBtn() {
+            __WEBPACK_IMPORTED_MODULE_4_gsap__["a" /* TweenMax */].to(this.$refs.FBbtn, .2, {
+                display: 'none',
+                opacity: 0
+            });
         }
     }
 });
@@ -14017,7 +14015,7 @@ window.fbAsyncInit = function () {
   FB.init({
     appId: '2073534662678601',
     cookie: true, // This is important, it's not enabled by default
-    version: 'v3.00'
+    version: 'v2.2'
   });
 };
 
@@ -47755,6 +47753,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -47764,28 +47771,70 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         Panel: __WEBPACK_IMPORTED_MODULE_1__ui_Panel_vue___default.a
     },
     props: {
+        competitor_id: {
+            type: Number,
+            default: 1
+        },
         fb_token: {
             type: String,
             default: null
         }
     },
+    data: function data() {
+        return {
+            competitor: null,
+            pageID: null,
+            posts: []
+        };
+    },
     methods: {
         getID: function getID() {
-            // console.log(FB)
-            // if (this.fb_token) {
-            //     var url = 'https://www.facebook.com/rareartlabs'
-            //
-            //     var data = new FormData()
-            //     data.append('fb_token', this.fb_token)
-            //     data.append('pageUrl', url)
-            //
-            //     this.$http.post('/api/get_facebook_id', data).then(response => {
-            //         console.log(response)
-            //     })
-            // }
+            var _this = this;
+
+            FB.api(this.competitor.pages[0].url, { fields: 'id', access_token: this.fb_token }, function (response) {
+                var data = new FormData();
+                data.append('id', _this.competitor.pages[0].id);
+                data.append('page_id', response.id);
+                _this.$http.post('/api/facebook/save-page-id', data).then(function (response) {
+                    _this.competitor = response.data;
+                });
+            });
+        },
+        getThePage: function getThePage() {
+            var _this2 = this;
+
+            this.$http.get('/api/competitor/' + this.competitor_id).then(function (response) {
+                _this2.competitor = response.data;
+
+                if (_this2.competitor.pages[0].FBid) {
+                    _this2.pageID = _this2.competitor.pages[0].FBid;
+                } else {
+                    _this2.getID();
+                }
+            });
+        },
+        grabPosts: function grabPosts() {
+            var _this3 = this;
+
+            if (this.pageID) {
+                FB.api('/' + this.pageID + '/feed', { access_token: this.fb_token }, function (response) {
+                    var data = new FormData();
+                    data.append('page_id', _this3.competitor.pages[0].id);
+                    data.append('posts', JSON.stringify(response.data));
+
+                    _this3.$http.post('/api/facebook/save-posts', data).then(function (response) {
+                        _this3.posts = response.data;
+                        console.log(_this3.posts);
+                    });
+                });
+            } else {
+                this.getID();
+            }
         }
     },
-    mounted: function mounted() {}
+    mounted: function mounted() {
+        this.getThePage();
+    }
 });
 
 /***/ }),
@@ -47797,8 +47846,26 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("panel", { attrs: { title: "Facebook" } }, [
-    _c("button", { staticClass: "btn btn-primary", on: { click: _vm.getID } }, [
-      _vm._v("Get ID")
+    _c("div", { staticClass: "stats d-flex justify-content-center w-100" }, [
+      this.competitor
+        ? _c("h4", [
+            _c("span", { staticClass: "text-muted small" }, [
+              _vm._v("Un post ogni ")
+            ]),
+            _vm._v(
+              "\n            " + _vm._s(_vm.competitor.stats) + "\n            "
+            ),
+            _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "btn-group" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-info", on: { click: _vm.grabPosts } },
+        [_vm._v("Grab Posts")]
+      )
     ])
   ])
 }
@@ -47938,7 +48005,7 @@ exports = module.exports = __webpack_require__(45)(false);
 
 
 // module
-exports.push([module.i, "\n.panel > h1 {\n  text-transform: uppercase;\n}\n", ""]);
+exports.push([module.i, "\n.panel > h3 {\n  text-transform: uppercase;\n}\n", ""]);
 
 // exports
 
@@ -47977,8 +48044,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "panel" },
-    [_c("h1", [_vm._v(_vm._s(this.title))]), _vm._v(" "), _vm._t("default")],
+    { staticClass: "panel bg-light p-4" },
+    [_c("h3", [_vm._v(_vm._s(this.title))]), _vm._v(" "), _vm._t("default")],
     2
   )
 }
@@ -56383,6 +56450,132 @@ var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 });
 
 /* unused harmony default export */ var _unused_webpack_default_export = (EventBus);
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(77)
+}
+var normalizeComponent = __webpack_require__(40)
+/* script */
+var __vue_script__ = __webpack_require__(79)
+/* template */
+var __vue_template__ = __webpack_require__(80)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/TwitterAnalysis.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4aee5a08", Component.options)
+  } else {
+    hotAPI.reload("data-v-4aee5a08", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(78);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(51)("5c075bd8", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4aee5a08\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TwitterAnalysis.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4aee5a08\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TwitterAnalysis.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(45)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'TwitterAnalysis'
+});
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4aee5a08", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
