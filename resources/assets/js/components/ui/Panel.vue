@@ -1,6 +1,7 @@
 <template lang="html">
     <div class="panel">
         <h1>{{ this.title }}</h1>
+        <slot></slot>
     </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
 .panel {
     > h1 {
         text-transform: uppercase;
-        font-family: 'Raleway';
+        // font-family: 'Raleway';
     }
 }
 </style>

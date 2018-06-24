@@ -16,3 +16,6 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('get_fb_token', 'UtilsController@get_fb_token');
+Route::post('get_facebook_id', 'UtilsController@get_facebook_id');
