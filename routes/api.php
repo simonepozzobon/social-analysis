@@ -25,5 +25,9 @@ Route::prefix('facebook')->group(function() {
     Route::get('/stats', 'PageController@stats');
 });
 
+Route::prefix('twitter')->group(function() {
+    Route::get('/get-tweets/{id}', 'TwitterController@get_tweets');
+});
+
 Route::get('get_fb_token', 'UtilsController@get_fb_token');
 Route::post('get_facebook_id', 'UtilsController@get_facebook_id');

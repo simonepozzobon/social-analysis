@@ -47863,7 +47863,7 @@ var render = function() {
     _c("div", { staticClass: "btn-group" }, [
       _c(
         "button",
-        { staticClass: "btn btn-info", on: { click: _vm.grabPosts } },
+        { staticClass: "btn btn-primary", on: { click: _vm.grabPosts } },
         [_vm._v("Grab Posts")]
       )
     ])
@@ -56537,7 +56537,7 @@ exports = module.exports = __webpack_require__(45)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -56548,13 +56548,41 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'TwitterAnalysis'
+    name: 'TwitterAnalysis',
+    components: {
+        Panel: __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue___default.a
+    },
+    data: function data() {
+        return {
+            competitor: null,
+            pageID: null,
+            posts: []
+        };
+    },
+    methods: {
+        getTweets: function getTweets() {}
+    },
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -56565,7 +56593,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("panel", { attrs: { title: "Twitter" } }, [
+    _c("div", { staticClass: "stats d-flex justify-content-center w-100" }, [
+      this.competitor
+        ? _c("h4", [
+            _c("span", { staticClass: "text-muted small" }, [
+              _vm._v("Un post ogni ")
+            ]),
+            _vm._v(
+              "\n            " + _vm._s(_vm.competitor.stats) + "\n            "
+            ),
+            _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "btn-group" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", on: { click: _vm.getTweets } },
+        [_vm._v("Grab Posts")]
+      )
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

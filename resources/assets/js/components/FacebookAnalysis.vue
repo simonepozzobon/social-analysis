@@ -8,7 +8,7 @@
             </h4>
         </div>
         <div class="btn-group">
-            <button class="btn btn-info" @click="grabPosts">Grab Posts</button>
+            <button class="btn btn-primary" @click="grabPosts">Grab Posts</button>
         </div>
     </panel>
 </template>

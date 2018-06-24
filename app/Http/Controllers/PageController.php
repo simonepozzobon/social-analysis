@@ -24,7 +24,7 @@ class PageController extends Controller
 
         $competitor = $page->competitor()->with('pages', 'pages.posts')->first();
         $competitor = $this->stats_short($competitor);
-        
+
         return $competitor;
     }
 

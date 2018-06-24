@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', 'PageController@stats');
+Route::get('/test', 'TwitterController@get_tweets');
