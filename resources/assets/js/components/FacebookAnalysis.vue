@@ -7,9 +7,9 @@
                 <span class="text-muted small">gg</span>
             </h4>
         </div>
-        <div class="btn-group">
+        <!-- <div class="btn-group">
             <button class="btn btn-primary" @click="grabPosts">Grab Posts</button>
-        </div>
+        </div> -->
     </panel>
 </template>
 
@@ -51,11 +51,12 @@ export default {
                 this.competitor.pages[0].url,
                 { fields: 'id', access_token: this.fb_token },
                 response => {
-                    console.log(response)
                     var data = new FormData()
                     data.append('id', this.competitor.pages[0].id)
                     data.append('page_id', response.id)
-                    this.$http.post('/api/facebook/save-page-id', data)
+                    this.$http.post('/api/facebook/save-page-id', data).then(response => {
+                        this.grabPosts()
+                    })
                 }
             )
         },
@@ -64,7 +65,6 @@ export default {
                 this.pageID = this.competitor.pages[0].FBid
             } else {
                 this.getID()
-                console.log('siamo qui')
             }
         },
         grabPosts: function() {

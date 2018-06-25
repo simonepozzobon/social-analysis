@@ -47804,11 +47804,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             FB.api(this.competitor.pages[0].url, { fields: 'id', access_token: this.fb_token }, function (response) {
-                console.log(response);
                 var data = new FormData();
                 data.append('id', _this.competitor.pages[0].id);
                 data.append('page_id', response.id);
-                _this.$http.post('/api/facebook/save-page-id', data);
+                _this.$http.post('/api/facebook/save-page-id', data).then(function (response) {
+                    _this.grabPosts();
+                });
             });
         },
         getCompetitor: function getCompetitor() {
@@ -47816,7 +47817,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.pageID = this.competitor.pages[0].FBid;
             } else {
                 this.getID();
-                console.log('siamo qui');
             }
         },
         grabPosts: function grabPosts() {
@@ -47861,14 +47861,6 @@ var render = function() {
             _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
           ])
         : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "btn-group" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", on: { click: _vm.grabPosts } },
-        [_vm._v("Grab Posts")]
-      )
     ])
   ])
 }
