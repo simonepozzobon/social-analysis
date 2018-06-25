@@ -11,4 +11,8 @@ class Competitor extends Model
     public function pages() {
         return $this->hasMany(Page::class);
     }
+
+    public function twitter_profiles() {
+        return $this->hasMany(TwProfile::class);
+    }
 }

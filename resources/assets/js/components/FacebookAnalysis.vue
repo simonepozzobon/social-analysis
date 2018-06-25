@@ -3,7 +3,7 @@
         <div class="stats d-flex justify-content-center w-100">
             <h4 v-if="this.competitor">
                 <span class="text-muted small">Un post ogni </span>
-                {{ competitor.stats }}
+                {{ competitor.pages[0].stats }}
                 <span class="text-muted small">gg</span>
             </h4>
         </div>
@@ -22,9 +22,9 @@ export default {
         Panel
     },
     props: {
-        competitor_id: {
-            type: Number,
-            default: 1,
+        competitor: {
+            type: Object,
+            default: function() {},
         },
         fb_token: {
             type: String,
@@ -33,7 +33,6 @@ export default {
     },
     data: function() {
         return {
-            competitor: null,
             pageID: null,
             posts: [],
         }
@@ -47,22 +46,16 @@ export default {
                     var data = new FormData()
                     data.append('id', this.competitor.pages[0].id)
                     data.append('page_id', response.id)
-                    this.$http.post('/api/facebook/save-page-id', data).then(response => {
-                        this.competitor = response.data
-                    })
+                    this.$http.post('/api/facebook/save-page-id', data)
                 }
             )
         },
-        getThePage: function() {
-            this.$http.get('/api/competitor/'+this.competitor_id).then(response => {
-                this.competitor = response.data
-
-                if (this.competitor.pages[0].FBid) {
-                    this.pageID = this.competitor.pages[0].FBid
-                } else {
-                    this.getID()
-                }
-            })
+        getCompetitor: function() {
+            if (this.competitor.pages[0].FBid) {
+                this.pageID = this.competitor.pages[0].FBid
+            } else {
+                this.getID()
+            }
         },
         grabPosts: function() {
             if (this.pageID) {
@@ -76,7 +69,6 @@ export default {
 
                         this.$http.post('/api/facebook/save-posts', data).then(response => {
                             this.posts = response.data
-                            console.log(this.posts)
                         })
                     }
                 )
@@ -86,7 +78,7 @@ export default {
         }
     },
     mounted: function() {
-        this.getThePage()
+        this.getCompetitor()
     }
 }
 </script>

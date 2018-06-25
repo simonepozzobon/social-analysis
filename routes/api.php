@@ -17,12 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/competitor/{id}', 'PageController@get_competitor');
+Route::get('/competitors', 'CompetitorController@get_competitors');
 
 Route::prefix('facebook')->group(function() {
     Route::post('/save-page-id', 'PageController@save_page_id');
     Route::post('/save-posts', 'PageController@save_posts');
-    Route::get('/stats', 'PageController@stats');
 });
 
 Route::prefix('twitter')->group(function() {

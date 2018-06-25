@@ -37,6 +37,7 @@ const app = new Vue({
     data: function() {
         return {
             fb_token: 'EAACEdEose0cBAIBQ1PLn5gliZB9rBf6k1xZBzey3pV3unFMzzrfm7vlOVEQ5RFJZAD3wQwzj2aZAZBMZBlfZAqeddIP3YUPNG6DhUqkZC7mLqtckjpUodVB46UJII6pJ9HTNNPKwc5wLwFn23lJ5yOuFlVFdd5AZBsTindxZBhyXOXKs4fVC8ZBkzg73Eg3ZBjXyABUhci7IgPGOggZDZD',
+            competitors: [],
         }
     },
     methods: {
@@ -50,11 +51,19 @@ const app = new Vue({
             })
             return false
         },
+        getCompetitors: function() {
+            this.$http.get('/api/competitors').then(response => {
+                this.competitors = response.data
+            })
+        },
         hideLoginBtn: function() {
             TweenMax.to(this.$refs.FBbtn, .2, {
                 display: 'none',
                 opacity: 0,
             })
         }
+    },
+    mounted: function() {
+        this.getCompetitors()
     }
 })

@@ -13922,7 +13922,8 @@ var app = new Vue({
     },
     data: function data() {
         return {
-            fb_token: 'EAACEdEose0cBAIBQ1PLn5gliZB9rBf6k1xZBzey3pV3unFMzzrfm7vlOVEQ5RFJZAD3wQwzj2aZAZBMZBlfZAqeddIP3YUPNG6DhUqkZC7mLqtckjpUodVB46UJII6pJ9HTNNPKwc5wLwFn23lJ5yOuFlVFdd5AZBsTindxZBhyXOXKs4fVC8ZBkzg73Eg3ZBjXyABUhci7IgPGOggZDZD'
+            fb_token: 'EAACEdEose0cBAIBQ1PLn5gliZB9rBf6k1xZBzey3pV3unFMzzrfm7vlOVEQ5RFJZAD3wQwzj2aZAZBMZBlfZAqeddIP3YUPNG6DhUqkZC7mLqtckjpUodVB46UJII6pJ9HTNNPKwc5wLwFn23lJ5yOuFlVFdd5AZBsTindxZBhyXOXKs4fVC8ZBkzg73Eg3ZBjXyABUhci7IgPGOggZDZD',
+            competitors: []
         };
     },
     methods: {
@@ -13938,12 +13939,22 @@ var app = new Vue({
             });
             return false;
         },
+        getCompetitors: function getCompetitors() {
+            var _this2 = this;
+
+            this.$http.get('/api/competitors').then(function (response) {
+                _this2.competitors = response.data;
+            });
+        },
         hideLoginBtn: function hideLoginBtn() {
             __WEBPACK_IMPORTED_MODULE_4_gsap__["a" /* TweenMax */].to(this.$refs.FBbtn, .2, {
                 display: 'none',
                 opacity: 0
             });
         }
+    },
+    mounted: function mounted() {
+        this.getCompetitors();
     }
 });
 
@@ -47771,9 +47782,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         Panel: __WEBPACK_IMPORTED_MODULE_1__ui_Panel_vue___default.a
     },
     props: {
-        competitor_id: {
-            type: Number,
-            default: 1
+        competitor: {
+            type: Object,
+            default: function _default() {}
         },
         fb_token: {
             type: String,
@@ -47782,7 +47793,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            competitor: null,
             pageID: null,
             posts: []
         };
@@ -47795,36 +47805,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var data = new FormData();
                 data.append('id', _this.competitor.pages[0].id);
                 data.append('page_id', response.id);
-                _this.$http.post('/api/facebook/save-page-id', data).then(function (response) {
-                    _this.competitor = response.data;
-                });
+                _this.$http.post('/api/facebook/save-page-id', data);
             });
         },
-        getThePage: function getThePage() {
-            var _this2 = this;
-
-            this.$http.get('/api/competitor/' + this.competitor_id).then(function (response) {
-                _this2.competitor = response.data;
-
-                if (_this2.competitor.pages[0].FBid) {
-                    _this2.pageID = _this2.competitor.pages[0].FBid;
-                } else {
-                    _this2.getID();
-                }
-            });
+        getCompetitor: function getCompetitor() {
+            if (this.competitor.pages[0].FBid) {
+                this.pageID = this.competitor.pages[0].FBid;
+            } else {
+                this.getID();
+            }
         },
         grabPosts: function grabPosts() {
-            var _this3 = this;
+            var _this2 = this;
 
             if (this.pageID) {
                 FB.api('/' + this.pageID + '/feed', { access_token: this.fb_token }, function (response) {
                     var data = new FormData();
-                    data.append('page_id', _this3.competitor.pages[0].id);
+                    data.append('page_id', _this2.competitor.pages[0].id);
                     data.append('posts', JSON.stringify(response.data));
 
-                    _this3.$http.post('/api/facebook/save-posts', data).then(function (response) {
-                        _this3.posts = response.data;
-                        console.log(_this3.posts);
+                    _this2.$http.post('/api/facebook/save-posts', data).then(function (response) {
+                        _this2.posts = response.data;
                     });
                 });
             } else {
@@ -47833,7 +47834,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        this.getThePage();
+        this.getCompetitor();
     }
 });
 
@@ -47853,7 +47854,9 @@ var render = function() {
               _vm._v("Un post ogni ")
             ]),
             _vm._v(
-              "\n            " + _vm._s(_vm.competitor.stats) + "\n            "
+              "\n            " +
+                _vm._s(_vm.competitor.pages[0].stats) +
+                "\n            "
             ),
             _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
           ])
@@ -56537,7 +56540,7 @@ exports = module.exports = __webpack_require__(45)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -56572,17 +56575,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     components: {
         Panel: __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue___default.a
     },
+    props: {
+        competitor: {
+            type: Object,
+            default: function _default() {}
+        }
+    },
     data: function data() {
-        return {
-            competitor: null,
-            pageID: null,
-            posts: []
-        };
+        return {};
+    },
+    computed: {
+        stats: function stats() {
+            return this.competitor.twitter_profiles[0].stats.toFixed(2);
+        }
     },
     methods: {
-        getTweets: function getTweets() {}
+        getTweets: function getTweets() {
+            if (this.competitor) {
+                this.$http.get('/api/twitter/get-tweets/' + this.competitor.id);
+            }
+        }
     },
-    mounted: function mounted() {}
+    mounted: function mounted() {
+        this.getTweets();
+    }
 });
 
 /***/ }),
@@ -56600,9 +56616,7 @@ var render = function() {
             _c("span", { staticClass: "text-muted small" }, [
               _vm._v("Un post ogni ")
             ]),
-            _vm._v(
-              "\n            " + _vm._s(_vm.competitor.stats) + "\n            "
-            ),
+            _vm._v("\n            " + _vm._s(_vm.stats) + "\n            "),
             _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
           ])
         : _vm._e()

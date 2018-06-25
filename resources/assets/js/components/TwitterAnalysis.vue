@@ -3,7 +3,7 @@
         <div class="stats d-flex justify-content-center w-100">
             <h4 v-if="this.competitor">
                 <span class="text-muted small">Un post ogni </span>
-                {{ competitor.stats }}
+                {{ stats }}
                 <span class="text-muted small">gg</span>
             </h4>
         </div>
@@ -20,20 +20,29 @@ export default {
     components: {
         Panel,
     },
+    props: {
+        competitor: {
+            type: Object,
+            default: function() {},
+        }
+    },
     data: function() {
-        return {
-            competitor: null,
-            pageID: null,
-            posts: [],
+        return {}
+    },
+    computed: {
+        stats: function() {
+            return this.competitor.twitter_profiles[0].stats.toFixed(2)
         }
     },
     methods: {
         getTweets: function() {
-            
+            if (this.competitor) {
+                this.$http.get('/api/twitter/get-tweets/'+this.competitor.id)
+            }
         }
     },
     mounted: function() {
-
+        this.getTweets()
     }
 }
 </script>
