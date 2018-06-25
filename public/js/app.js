@@ -13878,12 +13878,9 @@ module.exports = __webpack_require__(43);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__EventBus__ = __webpack_require__(75);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_gsap__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Competitor_vue__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Competitor_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Competitor_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__EventBus__ = __webpack_require__(75);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -13912,17 +13909,14 @@ Vue.prototype.$http.defaults.headers.common = {
 
 
 
-
-
 var app = new Vue({
     el: '#app',
     components: {
-        FacebookAnalysis: __WEBPACK_IMPORTED_MODULE_2__components_FacebookAnalysis_vue___default.a,
-        TwitterAnalysis: __WEBPACK_IMPORTED_MODULE_3__components_TwitterAnalysis_vue___default.a
+        Competitor: __WEBPACK_IMPORTED_MODULE_1__components_Competitor_vue___default.a
     },
     data: function data() {
         return {
-            fb_token: 'EAACEdEose0cBAIBQ1PLn5gliZB9rBf6k1xZBzey3pV3unFMzzrfm7vlOVEQ5RFJZAD3wQwzj2aZAZBMZBlfZAqeddIP3YUPNG6DhUqkZC7mLqtckjpUodVB46UJII6pJ9HTNNPKwc5wLwFn23lJ5yOuFlVFdd5AZBsTindxZBhyXOXKs4fVC8ZBkzg73Eg3ZBjXyABUhci7IgPGOggZDZD',
+            fb_token: 'EAACEdEose0cBAGCQAXuLdGdto4X6qRQ2yWmXJhKLsUqgPjJxa3ZCFZCwIBYSibQZCi9bhfinNohc0UZC3KfrAZBbdZBAkAHZAZCJLeZBLEYNaZAxg1JaiUJ9GiVCNEuTyUbatLZCgc5LFvp4bnOtXuSshTDZBMlJLfWkK4I64rX18uMKnTtiH3PxTshvN7JXwQ6ZC6HRKhBut6lkqYQZDZD',
             competitors: []
         };
     },
@@ -13947,7 +13941,7 @@ var app = new Vue({
             });
         },
         hideLoginBtn: function hideLoginBtn() {
-            __WEBPACK_IMPORTED_MODULE_4_gsap__["a" /* TweenMax */].to(this.$refs.FBbtn, .2, {
+            TweenMax.to(this.$refs.FBbtn, .2, {
                 display: 'none',
                 opacity: 0
             });
@@ -47797,11 +47791,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             posts: []
         };
     },
+    computed: {
+        stats: function stats() {
+            if (this.competitor.pages.length > 0) {
+                return this.competitor.pages[0].stats.toFixed(1);
+            }
+            return 0;
+        }
+    },
     methods: {
         getID: function getID() {
             var _this = this;
 
             FB.api(this.competitor.pages[0].url, { fields: 'id', access_token: this.fb_token }, function (response) {
+                console.log(response);
                 var data = new FormData();
                 data.append('id', _this.competitor.pages[0].id);
                 data.append('page_id', response.id);
@@ -47809,10 +47812,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         getCompetitor: function getCompetitor() {
-            if (this.competitor.pages[0].FBid) {
+            if (this.competitor.pages[0].FBid && this.competitor.pages[0].FBid != 'undefined') {
                 this.pageID = this.competitor.pages[0].FBid;
             } else {
                 this.getID();
+                console.log('siamo qui');
             }
         },
         grabPosts: function grabPosts() {
@@ -47853,11 +47857,7 @@ var render = function() {
             _c("span", { staticClass: "text-muted small" }, [
               _vm._v("Un post ogni ")
             ]),
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.competitor.pages[0].stats) +
-                "\n            "
-            ),
+            _vm._v("\n            " + _vm._s(_vm.stats) + "\n            "),
             _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
           ])
         : _vm._e()
@@ -55611,7 +55611,7 @@ const ExpoScaleEase = __WEBPACK_IMPORTED_MODULE_0__TweenLite_js__["e" /* _gsScop
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__EasePack_js__ = __webpack_require__(70);
 /* unused harmony reexport default */
 /* unused harmony reexport TweenLite */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_3__TweenMax_js__["a"]; });
+/* unused harmony reexport TweenMax */
 /* unused harmony reexport TimelineLite */
 /* unused harmony reexport TimelineMax */
 /* unused harmony reexport CSSPlugin */
@@ -55700,7 +55700,7 @@ module.exports = function(originalModule) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TweenMax; });
+/* unused harmony export default */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TweenLite_js__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TweenMaxBase_js__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__CSSPlugin_js__ = __webpack_require__(65);
@@ -56540,7 +56540,7 @@ exports = module.exports = __webpack_require__(45)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -56553,9 +56553,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue__);
-//
-//
-//
 //
 //
 //
@@ -56586,7 +56583,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         stats: function stats() {
-            return this.competitor.twitter_profiles[0].stats.toFixed(2);
+            return this.competitor.twitter_profiles[0].stats.toFixed(1);
         }
     },
     methods: {
@@ -56620,14 +56617,6 @@ var render = function() {
             _c("span", { staticClass: "text-muted small" }, [_vm._v("gg")])
           ])
         : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "btn-group" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", on: { click: _vm.getTweets } },
-        [_vm._v("Grab Posts")]
-      )
     ])
   ])
 }
@@ -56638,6 +56627,367 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-4aee5a08", module.exports)
+  }
+}
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(82)
+}
+var normalizeComponent = __webpack_require__(40)
+/* script */
+var __vue_script__ = __webpack_require__(84)
+/* template */
+var __vue_template__ = __webpack_require__(85)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InstagramAnalysis.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-51a696f2", Component.options)
+  } else {
+    hotAPI.reload("data-v-51a696f2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(83);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(51)("1cfdec91", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-51a696f2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./InstagramAnalysis.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-51a696f2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./InstagramAnalysis.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(45)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'InstagramAnalysis',
+    components: {
+        Panel: __WEBPACK_IMPORTED_MODULE_0__ui_Panel_vue___default.a
+    },
+    methods: {
+        getFeed: function getFeed() {
+            // axios.get('https://www.instagram.com/shraddhakapoor/?__a=1').then(response => {
+            //     console.log(response)
+            // })
+        }
+    },
+    mounted: function mounted() {
+        this.getFeed();
+    }
+});
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("panel", { attrs: { title: "Instagram" } }, [
+    _c("div", { staticClass: "stats d-flex justify-content-center w-100" })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-51a696f2", module.exports)
+  }
+}
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(87)
+}
+var normalizeComponent = __webpack_require__(40)
+/* script */
+var __vue_script__ = __webpack_require__(89)
+/* template */
+var __vue_template__ = __webpack_require__(90)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Competitor.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1e136e7a", Component.options)
+  } else {
+    hotAPI.reload("data-v-1e136e7a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(88);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(51)("7c1ea394", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1e136e7a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Competitor.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1e136e7a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Competitor.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(45)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FacebookAnalysis_vue__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FacebookAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__FacebookAnalysis_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InstagramAnalysis_vue__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InstagramAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__InstagramAnalysis_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TwitterAnalysis_vue__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TwitterAnalysis_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__TwitterAnalysis_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_gsap__ = __webpack_require__(71);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'Competitor',
+    components: {
+        FacebookAnalysis: __WEBPACK_IMPORTED_MODULE_0__FacebookAnalysis_vue___default.a,
+        InstagramAnalysis: __WEBPACK_IMPORTED_MODULE_1__InstagramAnalysis_vue___default.a,
+        TwitterAnalysis: __WEBPACK_IMPORTED_MODULE_2__TwitterAnalysis_vue___default.a
+    },
+    props: {
+        competitor: {
+            type: Object,
+            default: function _default() {}
+        },
+        fb_token: {
+            type: String,
+            default: null
+        }
+    }
+});
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container-fluid" }, [
+    _c("div", { staticClass: "row pt-4 pb-3" }, [
+      _c("div", { staticClass: "col w-100" }, [
+        _c("h1", { attrs: { align: "center" } }, [
+          _vm._v(_vm._s(_vm.competitor.name))
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row pb-4" }, [
+      _c(
+        "div",
+        { staticClass: "col-md-4" },
+        [
+          _c("facebook-analysis", {
+            attrs: { competitor: _vm.competitor, fb_token: _vm.fb_token }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-md-4" },
+        [_c("twitter-analysis", { attrs: { competitor: _vm.competitor } })],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-md-4" },
+        [_c("instagram-analysis", { attrs: { competitor: _vm.competitor } })],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1e136e7a", module.exports)
   }
 }
 

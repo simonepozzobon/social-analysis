@@ -6,13 +6,11 @@
                 <button type="button" name="button" class="btn btn-primary" @click="FBLogin" ref="FBbtn">FB Login</button>
             </div>
         </div> --}}
-        <div class="row" v-for="competitor in competitors" :key="competitor.id">
-            <div class="col-md-6">
-                <facebook-analysis :competitor="competitor" :fb_token="fb_token"></facebook-analysis>
-            </div>
-            <div class="col-md-6">
-                <twitter-analysis :competitor="competitor"></twitter-analysis>
-            </div>
-        </div>
+        <competitor
+            v-for="competitor in competitors"
+            :key="competitor.id"
+            :competitor="competitor"
+            :fb_token="fb_token" >
+        </competitor>
     </div>
 @endsection

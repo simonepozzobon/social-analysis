@@ -7,9 +7,6 @@
                 <span class="text-muted small">gg</span>
             </h4>
         </div>
-        <div class="btn-group">
-            <button class="btn btn-primary" @click="getTweets">Grab Posts</button>
-        </div>
     </panel>
 </template>
 
@@ -31,7 +28,7 @@ export default {
     },
     computed: {
         stats: function() {
-            return this.competitor.twitter_profiles[0].stats.toFixed(2)
+            return this.competitor.twitter_profiles[0].stats.toFixed(1)
         }
     },
     methods: {

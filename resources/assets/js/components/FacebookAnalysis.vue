@@ -3,7 +3,7 @@
         <div class="stats d-flex justify-content-center w-100">
             <h4 v-if="this.competitor">
                 <span class="text-muted small">Un post ogni </span>
-                {{ competitor.pages[0].stats }}
+                {{ stats }}
                 <span class="text-muted small">gg</span>
             </h4>
         </div>
@@ -37,12 +37,21 @@ export default {
             posts: [],
         }
     },
+    computed: {
+        stats: function() {
+            if (this.competitor.pages.length > 0) {
+                return this.competitor.pages[0].stats.toFixed(1)
+            }
+            return 0
+        }
+    },
     methods: {
         getID: function() {
             FB.api(
                 this.competitor.pages[0].url,
                 { fields: 'id', access_token: this.fb_token },
                 response => {
+                    console.log(response)
                     var data = new FormData()
                     data.append('id', this.competitor.pages[0].id)
                     data.append('page_id', response.id)
@@ -51,10 +60,11 @@ export default {
             )
         },
         getCompetitor: function() {
-            if (this.competitor.pages[0].FBid) {
+            if (this.competitor.pages[0].FBid && this.competitor.pages[0].FBid != 'undefined') {
                 this.pageID = this.competitor.pages[0].FBid
             } else {
                 this.getID()
+                console.log('siamo qui')
             }
         },
         grabPosts: function() {

@@ -41,6 +41,10 @@ class CompetitorController extends Controller
         $posts = $page->posts()->get();
         $count = $posts->count();
 
+        if ($count == 0) {
+            return 0;
+        }
+
         $d = collect();
 
         foreach ($posts as $key => $post) {
@@ -65,6 +69,10 @@ class CompetitorController extends Controller
 
         $tweets = $profile->tweets()->get();
         $count = $tweets->count();
+
+        if ($count == 0) {
+            return 0;
+        }
 
         $d = collect();
 

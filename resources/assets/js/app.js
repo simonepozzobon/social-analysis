@@ -23,20 +23,18 @@ Vue.prototype.$http.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest'
 }
 
+import Competitor from './components/Competitor.vue'
 import EventBus from './EventBus'
-import FacebookAnalysis from './components/FacebookAnalysis.vue'
-import TwitterAnalysis from './components/TwitterAnalysis.vue'
-import {TweenMax} from 'gsap'
+
 
 const app = new Vue({
     el: '#app',
     components: {
-        FacebookAnalysis,
-        TwitterAnalysis,
+        Competitor,
     },
     data: function() {
         return {
-            fb_token: 'EAACEdEose0cBAIBQ1PLn5gliZB9rBf6k1xZBzey3pV3unFMzzrfm7vlOVEQ5RFJZAD3wQwzj2aZAZBMZBlfZAqeddIP3YUPNG6DhUqkZC7mLqtckjpUodVB46UJII6pJ9HTNNPKwc5wLwFn23lJ5yOuFlVFdd5AZBsTindxZBhyXOXKs4fVC8ZBkzg73Eg3ZBjXyABUhci7IgPGOggZDZD',
+            fb_token: 'EAACEdEose0cBAGCQAXuLdGdto4X6qRQ2yWmXJhKLsUqgPjJxa3ZCFZCwIBYSibQZCi9bhfinNohc0UZC3KfrAZBbdZBAkAHZAZCJLeZBLEYNaZAxg1JaiUJ9GiVCNEuTyUbatLZCgc5LFvp4bnOtXuSshTDZBMlJLfWkK4I64rX18uMKnTtiH3PxTshvN7JXwQ6ZC6HRKhBut6lkqYQZDZD',
             competitors: [],
         }
     },
